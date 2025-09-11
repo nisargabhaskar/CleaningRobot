@@ -64,7 +64,7 @@ class GridWorldEnv(gym.Env):
         """
         # IMPORTANT: Must call this first to seed the random number generator
         super().reset(seed=seed)
-
+        self._completed_squares = np.zeros((self.size, self.size), dtype=int)
         num_obstacles = self.size
         rows = np.random.randint(0, self.size, num_obstacles)
         cols = np.random.randint(0, self.size, num_obstacles)
@@ -115,10 +115,6 @@ class GridWorldEnv(gym.Env):
             info = self._get_info()
             return observation, reward, terminated, truncated, info
 
-        
-    
-    
-
     def render_graphical(self):
         """Render the environment as a simple grid using matplotlib."""
 
@@ -135,17 +131,4 @@ class GridWorldEnv(gym.Env):
         plt.imshow(grid)
         plt.xticks([])
         plt.yticks([])
-        plt.show()
-
-
-
-    
-gym.register(
-    id="gymnasium_env/GridWorld-v0",
-    entry_point=GridWorldEnv,
-    max_episode_steps=300,  # Prevent infinite episodes
-)
-
-# env = gym.make("gymnasium_env/GridWorld-v0")
-# env.reset()
-# env.step(0)
+        plt.pause(0.1)
