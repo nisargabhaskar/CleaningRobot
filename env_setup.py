@@ -97,18 +97,27 @@ class GridWorldEnv(gym.Env):
         if self._completed_squares[new_pos[0], new_pos[1]] != -1:
             if self._completed_squares[new_pos[0], new_pos[1]] == 0:
                 self._completed_squares[new_pos[0], new_pos[1]] = 1
-            self._agent_location = new_pos
-            terminated = np.count_nonzero(self._completed_squares == 0) == 0 
-            truncated = False
-            reward = 1 if terminated else -0.1 * self._get_info()["squares_left"]/(self.size*self.size)
+                self._agent_location = new_pos
+                terminated = np.count_nonzero(self._completed_squares == 0) == 0 
+                truncated = False
+                reward = 10  if terminated else 1
+            elif np.array_equal(new_pos, self._agent_location):
+                reward = -0.05  
+                terminated = False
+                truncated = False
+            else :
+                self._agent_location = new_pos
+                reward = -0.02 
+                terminated = False
+                truncated = False
             observation = self._get_obs()
             info = self._get_info()
             self.render_graphical()
             return observation, reward, terminated, truncated, info
         
         else:
-            terminated = True      
-            truncated = False
+            terminated = False      
+            truncated = True
             reward = -1            
             self._agent_location = new_pos
             observation = self._get_obs()
@@ -128,7 +137,7 @@ class GridWorldEnv(gym.Env):
                     grid[r, c] = [0, 255, 0] 
         ar, ac = self._agent_location
         grid[ar, ac] = [255, 0, 0]
-        plt.imshow(grid)
-        plt.xticks([])
-        plt.yticks([])
-        plt.pause(0.1)
+        # plt.imshow(grid)
+        # plt.xticks([])
+        # plt.yticks([])
+        # plt.pause(0.1)
